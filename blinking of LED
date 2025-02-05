@@ -1,0 +1,41 @@
+#include <ESP8266WiFi.h>
+#include <ThingSpeak.h>
+#include <WiFiClient.h>
+//const int LED = D0;
+const char* ssid = "swarup"; 
+const char* password = "942066206";
+unsigned int LED=1;
+unsigned long channel = 2822926;  
+WiFiClient client;  
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED, OUTPUT); 
+  
+  
+  WiFi.begin(ssid, password);
+  
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("Finally Connected to WiFi");
+  
+  ThingSpeak.begin(client);
+}
+
+void loop() {
+  
+  float switchState = ThingSpeak.readFloatField(channel, 1); 
+
+  
+  if (switchState == HIGH) {
+    digitalWrite(LED, HIGH);    
+    }
+  else {
+    digitalWrite(LED, LOW);  
+  }
+  
+  delay(1000);
+}
